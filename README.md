@@ -65,7 +65,7 @@
 ### 2. Клонування репозиторію
 
 ```bash
-git clone https://github.com/your-user/ecg-quality-system.git
+git clone https://github.com/yuliaprohnichr/ecg_quality_system
 cd ecg-quality-system
 ```
 
