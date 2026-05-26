@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>ECG Quality System</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container hero">
+
+    <div class="hero-badge">
+        ECG QUALITY ANALYSIS SYSTEM
+    </div>
+
+    <h1>
+        Автоматизований аналіз якості ЕКГ-сигналів
+    </h1>
+
+    <p class="hero-text">
+        Інформаційна система призначена для автоматизованої обробки,
+        аналізу та візуалізації електрокардіографічних сигналів.
+        Система дозволяє оцінити якість сигналу, виконати
+        фільтрацію шумів, визначити R-піки, розрахувати
+        показники ЧСС та RR-інтервали, провести спектральний
+        аналіз і сформувати PDF-звіт із результатами.
+    </p>
+
+    <div class="feature-grid">
+
+        <div class="feature-card">
+            <span>01</span>
+            <h3>Завантаження сигналу</h3>
+            <p>
+    Підтримка файлів CSV, TXT та Excel (XLSX/XLS)
+    із багатоколонковими ЕКГ-сигналами та можливістю
+    вибору потрібного каналу аналізу.
+</p>
+        </div>
+
+        <div class="feature-card">
+            <span>02</span>
+            <h3>Попередня обробка</h3>
+            <p>
+                Усунення шумів, згладжування сигналу та
+                нормалізація даних.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <span>03</span>
+            <h3>Індикатори якості</h3>
+            <p>
+                Обчислення SNR, RMS, енергії сигналу,
+                дисперсії та рівня шуму.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <span>04</span>
+            <h3>Інтелектуальний аналіз</h3>
+            <p>
+                Автоматичне визначення R-піків,
+                оцінювання ЧСС та RR-інтервалів.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="upload-panel">
+
+        <div>
+            <h2>Завантаження ЕКГ-файлу</h2>
+
+            <p>
+                Виберіть файл із сигналом, вкажіть номер колонки з ЕКГ
+                та частоту дискретизації. Після запуску система автоматично
+                виконає аналіз і сформує результати.
+            </p>
+        </div>
+
+        <form action="/analyze" method="post" enctype="multipart/form-data">
+
+            <label class="input-label">
+                Файл із ЕКГ-сигналом
+            </label>
+
+            <input
+                type="file"
+                name="file"
+                accept=".csv,.txt,.xlsx,.xls"
+                required
+            >
+
+            <label class="input-label">
+                Номер колонки з ЕКГ-сигналом
+            </label>
+
+            <select name="ecg_column" required>
+                <option value="0">1 колонка</option>
+                <option value="1">2 колонка</option>
+                <option value="2">3 колонка</option>
+                <option value="3" selected>4 колонка</option>
+            </select>
+
+            <label class="input-label">
+                Частота дискретизації, Гц
+            </label>
+
+            <select name="sampling_rate" required>
+
+    <option value="125">125 Гц</option>
+    <option value="250">250 Гц</option>
+    <option value="360">360 Гц</option>
+    <option value="500">500 Гц</option>
+    <option value="800" selected>800 Гц</option>
+    <option value="1000">1000 Гц</option>
+    <option value="2000">2000 Гц</option>
+
+</select>
+
+            <button type="submit" onclick="showLoader()">
+                Проаналізувати сигнал
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div id="loader" class="loader-overlay">
+    <div class="loader-box">
+        <div class="spinner"></div>
+        <h2>Виконується аналіз сигналу...</h2>
+        <p>Система обробляє ЕКГ, визначає метрики якості та готує результати.</p>
+    </div>
+</div>
+
+<script>
+    function showLoader() {
+        const fileInput = document.querySelector('input[type="file"]');
+
+        if (fileInput.files.length > 0) {
+            document.getElementById("loader").style.display = "flex";
+        }
+    }
+</script>
+
+</body>
+</html>
