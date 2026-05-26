@@ -3,3 +3,7 @@ numpy
 pandas
 scipy
 plotly
+reportlab
+openpyxl
+kaleido
+gunicorn
