@@ -5,6 +5,11 @@
     <title>ECG Quality System</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
+<script>
+function toggleTheme() {
+    document.body.classList.toggle("light-mode");
+}
+</script>
 <body>
 
 <div class="container hero">
@@ -12,7 +17,9 @@
     <div class="hero-badge">
         ECG QUALITY ANALYSIS SYSTEM
     </div>
-
+<button class="theme-toggle" onclick="toggleTheme()">
+    🌙 / ☀️
+</button>
     <h1>
         Автоматизований аналіз якості ЕКГ-сигналів
     </h1>

@@ -442,3 +442,92 @@ input[type="number"] {
     margin-bottom: 20px;
     font-size: 15px;
 }
+
+body.light-mode {
+    background:
+        radial-gradient(circle at top left, rgba(14, 165, 233, 0.16), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.12), transparent 30%),
+        #f5f9ff;
+    color: #0f172a;
+}
+
+body.light-mode .container {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #bfdbfe;
+    box-shadow: 0 12px 40px rgba(30, 64, 175, 0.14);
+}
+
+body.light-mode h1,
+body.light-mode h2,
+body.light-mode h3 {
+    color: #0f172a;
+}
+
+body.light-mode p,
+body.light-mode .hero-text {
+    color: #334155;
+}
+
+body.light-mode .hero-badge {
+    background: #e0f2fe;
+    border: 1px solid #38bdf8;
+    color: #0369a1;
+}
+
+body.light-mode .feature-card,
+body.light-mode .upload-panel,
+body.light-mode .dashboard-frame,
+body.light-mode .conclusion {
+    background: linear-gradient(145deg, #ffffff, #eff6ff);
+    color: #0f172a;
+    border: 1px solid #bfdbfe;
+    box-shadow: 0 10px 28px rgba(59, 130, 246, 0.12);
+}
+
+body.light-mode .feature-card span,
+body.light-mode table td:first-child,
+body.light-mode .input-label {
+    color: #0284c7;
+}
+
+body.light-mode input,
+body.light-mode select,
+body.light-mode input[type="file"],
+body.light-mode input[type="number"] {
+    background: #ffffff;
+    color: #0f172a;
+    border: 1px solid #38bdf8;
+}
+
+body.light-mode table {
+    background: #ffffff;
+}
+
+body.light-mode table td {
+    color: #0f172a;
+    border: 1px solid #dbeafe;
+}
+
+body.light-mode table tr:nth-child(even) {
+    background: #eff6ff;
+}
+
+body.light-mode table tr:nth-child(odd) {
+    background: #ffffff;
+}
+
+body.light-mode .tab-btn {
+    background: #ffffff;
+    color: #0369a1;
+    border: 1px solid #7dd3fc;
+}
+
+body.light-mode .tab-btn.active {
+    background: linear-gradient(135deg, #0284c7, #38bdf8);
+    color: white;
+}
+
+body.light-mode .actions a,
+body.light-mode .download-btn {
+    color: white;
+}

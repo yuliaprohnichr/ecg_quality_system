@@ -5,8 +5,15 @@
     <title>Результати аналізу ЕКГ</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
+<script>
+function toggleTheme() {
+    document.body.classList.toggle("light-mode");
+}
+</script>
 <body>
-
+<button class="theme-toggle" onclick="toggleTheme()">
+    🌙 / ☀️
+</button>
 <div class="container dashboard">
 
     <div class="hero-badge">ECG ANALYSIS DASHBOARD</div>
