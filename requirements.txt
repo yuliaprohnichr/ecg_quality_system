@@ -5,5 +5,4 @@ scipy
 plotly
 reportlab
 openpyxl
-kaleido==0.2.1
-gunicorn
+kaleido
