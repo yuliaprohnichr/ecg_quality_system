@@ -5,17 +5,29 @@ import plotly.io as pio
 from scipy.signal import find_peaks
 
 
+VISIBLE_SAMPLES = 4000
+
+
 def prepare_plots_folder():
     folder = "static/plots"
     os.makedirs(folder, exist_ok=True)
     return folder
 
 
-def create_single_plot(signal, title, line_name, color):
+def create_time_axis(signal, fs):
+    visible_length = min(len(signal), VISIBLE_SAMPLES)
+    return np.arange(visible_length) / fs
+
+
+def create_single_plot(signal, title, line_name, color, fs=800):
+    visible_signal = signal[:VISIBLE_SAMPLES]
+    time_axis = create_time_axis(signal, fs)
+
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(
-        y=signal[:4000],
+        x=time_axis,
+        y=visible_signal,
         mode="lines",
         name=line_name,
         line=dict(color=color)
@@ -23,8 +35,8 @@ def create_single_plot(signal, title, line_name, color):
 
     fig.update_layout(
         title=title,
-        xaxis_title="Номер відліку",
-        yaxis_title="Амплітуда",
+        xaxis_title="Час, с",
+        yaxis_title="Амплітуда ЕКГ-сигналу, умовні одиниці",
         template="plotly_white",
         autosize=False,
         width=700,
@@ -35,7 +47,8 @@ def create_single_plot(signal, title, line_name, color):
 
 
 def create_r_peaks_plot(signal, fs=800):
-    visible_signal = signal[:4000]
+    visible_signal = signal[:VISIBLE_SAMPLES]
+    time_axis = create_time_axis(signal, fs)
 
     peaks, _ = find_peaks(
         visible_signal,
@@ -46,6 +59,7 @@ def create_r_peaks_plot(signal, fs=800):
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(
+        x=time_axis,
         y=visible_signal,
         mode="lines",
         name="Оброблений ЕКГ-сигнал",
@@ -53,17 +67,17 @@ def create_r_peaks_plot(signal, fs=800):
     ))
 
     fig.add_trace(go.Scatter(
-        x=peaks,
+        x=time_axis[peaks],
         y=visible_signal[peaks],
         mode="markers",
-        name="R-піки",
+        name="Виявлені R-піки",
         marker=dict(color="orange", size=8)
     ))
 
     fig.update_layout(
         title="Виявлення R-піків на ЕКГ-сигналі",
-        xaxis_title="Номер відліку",
-        yaxis_title="Амплітуда",
+        xaxis_title="Час, с",
+        yaxis_title="Амплітуда ЕКГ-сигналу, умовні одиниці",
         template="plotly_white",
         autosize=False,
         width=700,
@@ -90,14 +104,14 @@ def create_spectrum_plot(signal, title, color, fs=800):
         x=positive_freqs,
         y=positive_magnitude,
         mode="lines",
-        name="Спектр",
+        name="Амплітудний спектр",
         line=dict(color=color)
     ))
 
     fig.update_layout(
         title=title,
-        xaxis_title="Частота (Гц)",
-        yaxis_title="Амплітуда",
+        xaxis_title="Частота, Гц",
+        yaxis_title="Амплітуда спектра, умовні одиниці",
         template="plotly_white",
         autosize=False,
         width=700,
@@ -115,21 +129,24 @@ def create_signal_plots_dict(original_signal, processed_signal, fs=800):
             original_signal,
             "Початковий ЕКГ-сигнал",
             "Початковий сигнал",
-            "blue"
+            "blue",
+            fs
         ),
 
         "processed": create_single_plot(
             processed_signal,
-            "Оброблений ЕКГ-сигнал",
+            "Оброблений ЕКГ-сигнал після фільтрації",
             "Оброблений сигнал",
-            "green"
+            "green",
+            fs
         ),
 
         "noise": create_single_plot(
             noise_signal,
-            "Видалений шумовий компонент",
-            "Видалений шум",
-            "red"
+            "Шумовий компонент, видалений під час обробки",
+            "Шумовий компонент",
+            "red",
+            fs
         ),
 
         "r_peaks": create_r_peaks_plot(
@@ -160,11 +177,15 @@ def save_plot_image(fig, filename):
     return path
 
 
-def create_ecg_fragment_image(processed_signal):
+def create_ecg_fragment_image(processed_signal, fs=800):
+    visible_signal = processed_signal[:VISIBLE_SAMPLES]
+    time_axis = create_time_axis(processed_signal, fs)
+
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(
-        y=processed_signal[:4000],
+        x=time_axis,
+        y=visible_signal,
         mode="lines",
         name="Оброблений ЕКГ-сигнал",
         line=dict(color="#00AEEF", width=2)
@@ -172,8 +193,8 @@ def create_ecg_fragment_image(processed_signal):
 
     fig.update_layout(
         title="Фрагмент обробленого ЕКГ-сигналу",
-        xaxis_title="Номер відліку",
-        yaxis_title="Амплітуда",
+        xaxis_title="Час, секунди",
+        yaxis_title="Амплітуда ЕКГ-сигналу, умовні одиниці",
         template="plotly_dark",
         paper_bgcolor="#06111F",
         plot_bgcolor="#06111F",
@@ -188,7 +209,8 @@ def create_ecg_fragment_image(processed_signal):
 
 
 def create_r_peaks_image(processed_signal, fs=800):
-    visible_signal = processed_signal[:4000]
+    visible_signal = processed_signal[:VISIBLE_SAMPLES]
+    time_axis = create_time_axis(processed_signal, fs)
 
     peaks, _ = find_peaks(
         visible_signal,
@@ -199,24 +221,25 @@ def create_r_peaks_image(processed_signal, fs=800):
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(
+        x=time_axis,
         y=visible_signal,
         mode="lines",
-        name="ЕКГ",
+        name="Оброблений ЕКГ-сигнал",
         line=dict(color="#00AEEF", width=2)
     ))
 
     fig.add_trace(go.Scatter(
-        x=peaks,
+        x=time_axis[peaks],
         y=visible_signal[peaks],
         mode="markers",
-        name="R-піки",
+        name="Виявлені R-піки",
         marker=dict(color="#22C55E", size=8)
     ))
 
     fig.update_layout(
         title="Виявлення R-піків",
-        xaxis_title="Номер відліку",
-        yaxis_title="Амплітуда",
+        xaxis_title="Час, с",
+        yaxis_title="Амплітуда ЕКГ-сигналу, умовні одиниці",
         template="plotly_dark",
         paper_bgcolor="#06111F",
         plot_bgcolor="#06111F",
@@ -247,14 +270,14 @@ def create_spectrum_image(original_signal, fs=800):
         x=positive_freqs,
         y=positive_magnitude,
         mode="lines",
-        name="Спектр",
+        name="Амплітудний спектр",
         line=dict(color="#A855F7", width=2)
     ))
 
     fig.update_layout(
         title="Спектральний аналіз ЕКГ-сигналу",
-        xaxis_title="Частота (Гц)",
-        yaxis_title="Амплітуда",
+        xaxis_title="Частота, Гц",
+        yaxis_title="Амплітуда спектра, умовні одиниці",
         template="plotly_dark",
         paper_bgcolor="#06111F",
         plot_bgcolor="#06111F",
@@ -271,7 +294,8 @@ def create_spectrum_image(original_signal, fs=800):
 def create_pdf_plot_images(original_signal, processed_signal, fs=800):
     return {
         "ecg_fragment": create_ecg_fragment_image(
-            processed_signal
+            processed_signal,
+            fs
         ),
 
         "r_peaks": create_r_peaks_image(
